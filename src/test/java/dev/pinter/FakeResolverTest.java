@@ -88,7 +88,7 @@ public class FakeResolverTest {
     public void shouldResolveA() throws IOException {
         String domain = "fakeresolver.zone";
         FakeResolver fakeResolver = new FakeResolver();
-        fakeResolver.fromZoneFile(domain, "src/test/resources/FakeResolverTest.zone");
+        fakeResolver.fromZoneFile(domain, DNSZONEFILE);
 
         Lookup.setDefaultResolver(fakeResolver);
         Record[] found = new Lookup(Name.fromString("shouldResolveA", Name.fromString(domain)), Type.A).run();
@@ -106,7 +106,7 @@ public class FakeResolverTest {
     public void shouldReturnList() throws IOException {
         String domain = "fakeresolver.zone";
         FakeResolver fakeResolver = new FakeResolver();
-        fakeResolver.fromZoneFile(domain, "src/test/resources/FakeResolverTest.zone");
+        fakeResolver.fromZoneFile(domain, DNSZONEFILE);
         logger.info("Size: {}", fakeResolver.getRecords().size());
         assertFalse(fakeResolver.getRecords().isEmpty());
     }
@@ -263,7 +263,7 @@ public class FakeResolverTest {
         assertEquals(0, fakeResolver.getRecords().size());
     }
 
-    private void recordsMatch(Name name, int type) throws UnknownHostException, TextParseException {
+    private void recordsMatch(Name name, int type) throws UnknownHostException {
         FakeResolver fakeResolver = new FakeResolver();
         SimpleResolver simpleResolver = new SimpleResolver();
 
