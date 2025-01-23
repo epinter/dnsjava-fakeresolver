@@ -58,25 +58,11 @@ public class FakeResolverTest {
 
     @BeforeAll
     public static void setupAll() throws TextParseException {
-        if (new Lookup(externalNameA, Type.A).run() == null) {
-            externalNameA = "apache.org";
-        }
-
-        if (new Lookup(externalNameAAAA, Type.A).run() == null) {
-            externalNameAAAA = "apache.org";
-        }
-
-        if (new Lookup(externalNameTXT, Type.TXT).run() == null) {
-            externalNameTXT = "apache.org";
-        }
-
-        if (new Lookup(externalNameMX, Type.MX).run() == null) {
-            externalNameMX = "apache.org";
-        }
-
-        if (new Lookup(externalNameCNAME, Type.CNAME).run() == null) {
-            externalNameCNAME = "www.apache.org";
-        }
+        externalNameA = validateName(externalNameA, Type.A, "apache.org", "iana.org");
+        externalNameAAAA = validateName(externalNameAAAA, Type.AAAA, "apache.org", "iana.org.");
+        externalNameTXT = validateName(externalNameTXT, Type.TXT, "apache.org", "iana.org");
+        externalNameMX = validateName(externalNameMX, Type.MX, "apache.org", "iana.org");
+        externalNameCNAME = validateName(externalNameCNAME, Type.CNAME, "www.iana.org", "www.lacnic.net");
     }
 
     @BeforeEach
@@ -327,5 +313,22 @@ public class FakeResolverTest {
 
     private List<Record> lookup(Name name, int type, Resolver resolver) {
         return lookupRRset(name, type, resolver).rrs();
+    }
+
+    private static boolean isValidRecord(String name, int type) throws TextParseException {
+        return new Lookup(name, type).run() != null;
+    }
+
+    private static String validateName(String name, int type, String... fallbacks) throws TextParseException {
+        if (!isValidRecord(name, type)) {
+            for (String f : fallbacks) {
+                if (isValidRecord(f, type)) {
+                    return f;
+                }
+            }
+            logger.error("Name '{}' of type '{}' is invalid.", name, Type.string(type));
+            return "";
+        }
+        return name;
     }
 }
