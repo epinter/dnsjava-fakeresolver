@@ -47,6 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 public class FakeResolverTest {
     private static final Logger logger = LoggerFactory.getLogger(FakeResolverTest.class);
+    private static final String DNSZONEFILE = "src/test/resources/FakeResolverTest.zone";
 
     @BeforeEach
     public void setup() {
@@ -84,10 +85,11 @@ public class FakeResolverTest {
     public void shouldResolveTXT() throws IOException {
         String domain = "fakeresolver.zone";
         FakeResolver fakeResolver = new FakeResolver();
-        fakeResolver.fromZoneFile(domain, "src/test/resources/FakeResolverTest.zone");
+        fakeResolver.fromZoneFile(domain, DNSZONEFILE);
 
         List<Record> found = lookup(Name.fromString("shouldResolveTXT", Name.fromString(domain)), Type.TXT, fakeResolver);
-        logger.info("Found: {}", found);
+        assertNotNull(found);
+        found.forEach(r -> assertEquals(Type.TXT, r.getType()));
         assertEquals(2, found.size());
     }
 
@@ -95,36 +97,36 @@ public class FakeResolverTest {
     public void shouldResolveMX() throws IOException {
         String domain = "fakeresolver.zone";
         FakeResolver fakeResolver = new FakeResolver();
-        fakeResolver.fromZoneFile(domain, "src/test/resources/FakeResolverTest.zone");
+        fakeResolver.fromZoneFile(domain, DNSZONEFILE);
 
         List<Record> found = lookup(Name.fromString("shouldResolveMX", Name.fromString(domain)), Type.MX, fakeResolver);
-        logger.info("Found: {}", found);
-        int mxPrio = ((MXRecord) found.getFirst()).getPriority();
-        logger.info("MX Priority: {}", mxPrio);
+        assertNotNull(found);
+        found.forEach(r -> assertEquals(Type.MX, r.getType()));
         assertEquals(1, found.size());
-        assertEquals(10, mxPrio);
+        assertEquals(10, ((MXRecord) found.get(0)).getPriority());
     }
 
     @Test
     public void shouldResolveExternallyCNAME() throws IOException {
         String domain = "fakeresolver.zone";
-        FakeResolver fakeResolver = new FakeResolver(new SimpleResolver("8.8.4.4"));
-        fakeResolver.fromZoneFile(domain, "src/test/resources/FakeResolverTest.zone");
+        FakeResolver fakeResolver = new FakeResolver(new SimpleResolver());
+        fakeResolver.fromZoneFile(domain, DNSZONEFILE);
 
         List<Record> found = lookup(Name.fromString("shouldResolveExternallyCNAME", Name.fromString(domain)), Type.A, fakeResolver);
-        logger.info("Found: {}", found);
+        assertNotNull(found);
+        found.forEach(r -> assertEquals(Type.A, r.getType()));
         assertEquals(1, found.size());
     }
 
     @Test
     public void shouldResolveExternallyLegacy() throws IOException {
         String domain = "fakeresolver.zone";
-        FakeResolver fakeResolver = new FakeResolver(new SimpleResolver("8.8.4.4"));
-        fakeResolver.fromZoneFile(domain, "src/test/resources/FakeResolverTest.zone");
+        FakeResolver fakeResolver = new FakeResolver(new SimpleResolver());
+        fakeResolver.fromZoneFile(domain, DNSZONEFILE);
 
         Record[] found = new Lookup(Name.fromString("www.google.com."), Type.A).run();
         assertNotNull(found);
-        logger.info("Found: {}", found[0]);
+        Arrays.asList(found).forEach(r -> assertEquals(Type.A, r.getType()));
         assertEquals(1, found.length);
     }
 
@@ -215,14 +217,15 @@ public class FakeResolverTest {
                     .whenComplete((a, ex) -> {
                         found.addAll(a.getRecords());
                         if (ex != null) {
-                            logger.error("Error", ex);
+                            throw new RuntimeException(ex);
                         }
-                    }).toCompletableFuture().get();
+                    })
+                    .toCompletableFuture().get();
         } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
+            logger.error("Error during dns lookup: ", e);
+            return null;
         }
 
         return found;
     }
-
 }
