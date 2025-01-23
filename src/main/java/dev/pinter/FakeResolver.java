@@ -236,7 +236,18 @@ public class FakeResolver implements Resolver {
     }
 
     /**
+     * Add records to the list. Records in the list will be used to resolve names.
+     * The list is NOT cleared.
+     *
+     * @param responseRecords records
+     */
+    public void addRecords(List<Record> responseRecords) {
+        this.responseRecords.addAll(responseRecords);
+    }
+
+    /**
      * Import records from a zone file.
+     * Records list is not cleared.
      *
      * @param domain   domain name
      * @param zoneFile zonefile path

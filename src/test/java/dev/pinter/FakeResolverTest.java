@@ -256,6 +256,22 @@ public class FakeResolverTest {
     }
 
     @Test
+    public void shouldReturnFourRecords() throws UnknownHostException, TextParseException {
+        FakeResolver fakeResolver = new FakeResolver();
+        fakeResolver.setRecords(Arrays.asList(new Record[]{
+                        new TXTRecord(Name.fromString("a."), DClass.IN, 60L, "a"),
+                        new TXTRecord(Name.fromString("b."), DClass.IN, 30L, "b")
+                })
+        );
+        fakeResolver.addRecords(Arrays.asList(new Record[]{
+                        new TXTRecord(Name.fromString("c."), DClass.IN, 60L, "c"),
+                        new TXTRecord(Name.fromString("d."), DClass.IN, 30L, "d")
+                })
+        );
+        assertEquals(4, fakeResolver.getRecords().size());
+    }
+
+    @Test
     public void shouldReturnEmpty() throws UnknownHostException, TextParseException {
         FakeResolver fakeResolver = new FakeResolver();
         fakeResolver.setRecord(new TXTRecord(Name.fromString("a."), DClass.IN, 60L, "a"));
