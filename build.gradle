@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'java-library'
+}
+
+group = 'dev.pinter'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = 11
+    withSourcesJar()
+    withJavadocJar()
+}
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.0-M2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    api 'dnsjava:dnsjava:3.6.0'
+    implementation 'org.slf4j:slf4j-simple:2.0.16'
+}
+
+ext {
+    moduleName = 'dnsjava-fakeresolver'
+}
+
+jar {
+    manifest {
+        attributes('Class-Path': configurations.runtimeClasspath.collect { it.getName() }.join(' '),
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version,
+                'Implementation-Vendor': 'Emerson Pinter',
+                'Automatic-Module-Name': moduleName)
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
