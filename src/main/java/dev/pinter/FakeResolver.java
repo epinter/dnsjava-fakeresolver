@@ -309,4 +309,9 @@ public class FakeResolver implements Resolver {
         }
         return response;
     }
+
+    @Override
+    public String toString() {
+        return "FakeResolver [records=" + responseRecords.size() + "]";
+    }
 }
