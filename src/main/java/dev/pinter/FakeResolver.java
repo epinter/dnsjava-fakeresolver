@@ -119,10 +119,10 @@ public class FakeResolver implements Resolver {
     public Message send(Message query) throws IOException {
         Message response = buildMessage(query);
         if (response.getSection(Section.ANSWER).isEmpty() && !isInternal(query.getQuestion().getName())) {
-            logger.info(MSG_SEARCH_EXT, query.getQuestion().getName());
+            logger.debug(MSG_SEARCH_EXT, query.getQuestion().getName());
             return externalResolver.send(query);
         } else {
-            logger.info(MSG_FOUND_INT, query.getQuestion().getName());
+            logger.debug(MSG_FOUND_INT, query.getQuestion().getName());
         }
 
         return response;
@@ -139,10 +139,10 @@ public class FakeResolver implements Resolver {
     public CompletionStage<Message> sendAsync(Message query) {
         Message response = buildMessage(query);
         if (response.getSection(Section.ANSWER).isEmpty() && !isInternal(query.getQuestion().getName())) {
-            logger.info(MSG_SEARCH_EXT, query.getQuestion().getName());
+            logger.debug(MSG_SEARCH_EXT, query.getQuestion().getName());
             return externalResolver.sendAsync(query);
         } else {
-            logger.info(MSG_FOUND_INT, query.getQuestion().getName());
+            logger.debug(MSG_FOUND_INT, query.getQuestion().getName());
         }
 
         return CompletableFuture.completedFuture(response);
