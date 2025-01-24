@@ -53,8 +53,8 @@ import java.util.stream.IntStream;
 public class FakeResolver implements Resolver {
     private static final Logger logger = LoggerFactory.getLogger(FakeResolver.class);
 
-    private static final String MSG_SEARCH_EXT = "[FakeResolver] Searching '{}' externally";
-    private static final String MSG_FOUND_INT = "[FakeResolver] Found '{}' internally";
+    private static final String MSG_SEARCH_EXT = "Searching '{}' externally";
+    private static final String MSG_FOUND_INT = "Found '{}' internally";
 
     private final List<Record> responseRecords = new ArrayList<>();
     private final Resolver externalResolver;
