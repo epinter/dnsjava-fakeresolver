@@ -104,7 +104,7 @@ public class FakeResolverTest {
         List<Record> found = lookup(Name.fromString("shouldResolveTXT", Name.fromString(domain)), Type.TXT, fakeResolver);
         assertNotNull(found);
         assertFalse(found.isEmpty());
-        found.forEach(r -> assertEquals(Type.TXT, r.getType()));
+        found.forEach(r -> assertEquals(Type.TXT, r.getType(), "Wrong Type: " + Type.string(r.getType())));
     }
 
     @Test
@@ -121,7 +121,8 @@ public class FakeResolverTest {
         List<Record> found = lookup(Name.fromString("shouldResolveMX", Name.fromString(domain)), Type.MX, fakeResolver);
         assertNotNull(found);
         assertFalse(found.isEmpty());
-        found.forEach(r -> assertEquals(Type.MX, r.getType()));
+        found.forEach(r -> assertEquals(Type.MX, r.getType(), "Wrong Type: " + Type.string(r.getType())));
+
     }
 
     @Test
@@ -138,7 +139,8 @@ public class FakeResolverTest {
         List<Record> found = lookup(Name.fromString("shouldResolveExternallyCNAME", Name.fromString(domain)), Type.A, fakeResolver);
         assertNotNull(found);
         assertFalse(found.isEmpty());
-        found.forEach(r -> assertEquals(Type.A, r.getType()));
+        found.forEach(r -> assertEquals(Type.A, r.getType(), "Wrong Type: " + Type.string(r.getType())));
+
     }
 
     @Test
@@ -165,7 +167,7 @@ public class FakeResolverTest {
         Record[] found = new Lookup(Name.fromString(externalNameCNAME), Type.A).run();
         assertNotNull(found);
         assertTrue(found.length > 0);
-        Arrays.asList(found).forEach(r -> assertEquals(Type.A, r.getType()));
+        Arrays.asList(found).forEach(r -> assertEquals(Type.A, r.getType(), "Wrong Type: " + Type.string(r.getType())));
     }
 
     @Test
