@@ -1,12 +1,9 @@
 $TTL 30
 @   30    IN    SOA    ns1.fakeresolver.test. hostmaster.fakeresolver.test. 1 30 30 30 30
-@   30    IN    NS     127.0.0.1
+@   30    IN    NS     ns1.fakeresolver.test.
 
-shouldResolveTXT   IN    TXT    "v=spf1 ip4:192.168.251.127 -all"
-shouldResolveTXT   IN    TXT    "lkjdslkhkjlahljkjkasdhfklsdf"
-shouldResolveA   IN    A      192.168.2.10
-shouldResolveMX   IN    MX 10      shouldResolveExternallyCNAME
-
-shouldResolveExternallyCNAME   IN    CNAME  www.example.com.
-
-test2   IN    TXT   "v=spf1 include:_spf.google.com include:spf.protection.outlook.com ip4:2.3.4.5 ip4:192.168.251.127 -all"
+shouldResolveTXT                   IN    TXT      "v=spf1 ip4:192.168.251.127 -all"
+shouldResolveTXT                   IN    TXT      "lkjdslkhkjlahljkjkasdhfklsdf"
+shouldResolveA                     IN    A        192.168.2.10
+shouldResolveMX                    IN    MX 10    shouldResolveExternallyCNAME
+shouldResolveExternallyCNAME       IN    CNAME    www.example.com.
