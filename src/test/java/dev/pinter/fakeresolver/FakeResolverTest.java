@@ -78,7 +78,7 @@ public class FakeResolverTest {
         Lookup.setDefaultResolver(fakeResolver);
         Record[] found = new Lookup(Name.fromString("shouldResolveA", Name.fromString(domain)), Type.A).run();
         assertNotNull(found);
-        assertTrue(found.length > 0);
+        assertEquals(1, found.length);
     }
 
     @Test
@@ -103,7 +103,7 @@ public class FakeResolverTest {
 
         List<Record> found = lookup(Name.fromString("shouldResolveTXT", Name.fromString(domain)), Type.TXT, fakeResolver);
         assertNotNull(found);
-        assertFalse(found.isEmpty());
+        assertEquals(2, found.size());
         found.forEach(r -> assertEquals(Type.TXT, r.getType(), "Wrong Type: " + Type.string(r.getType())));
     }
 
@@ -120,7 +120,7 @@ public class FakeResolverTest {
 
         List<Record> found = lookup(Name.fromString("shouldResolveMX", Name.fromString(domain)), Type.MX, fakeResolver);
         assertNotNull(found);
-        assertFalse(found.isEmpty());
+        assertEquals(1, found.size());
         found.forEach(r -> assertEquals(Type.MX, r.getType(), "Wrong Type: " + Type.string(r.getType())));
 
     }
