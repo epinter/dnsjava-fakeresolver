@@ -53,7 +53,7 @@ public class FakeResolverTest {
     private static String externalNameAAAA = "example.com";
     private static String externalNameTXT = "example.com";
     private static String externalNameMX = "example.com";
-    private static String externalNameCNAME = "www.example.com";
+    private static String externalNameCNAME = "www.exaxmple.com";
 
     @BeforeAll
     public static void setupAll() throws TextParseException {
@@ -61,7 +61,7 @@ public class FakeResolverTest {
         externalNameAAAA = validateName(externalNameAAAA, Type.AAAA, "apache.org", "iana.org.");
         externalNameTXT = validateName(externalNameTXT, Type.TXT, "apache.org", "iana.org");
         externalNameMX = validateName(externalNameMX, Type.MX, "apache.org", "iana.org");
-        externalNameCNAME = validateName(externalNameCNAME, Type.CNAME, "www.iana.org", "www.github.com");
+        externalNameCNAME = validateName(externalNameCNAME, Type.CNAME, "www.ixana.org", "www.githxub.com");
     }
 
     @BeforeEach
