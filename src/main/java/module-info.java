@@ -16,7 +16,8 @@
 /**
  * FakeResolver module
  */
-module dnsjava.fakeresolver.main {
+module dev.pinter.fakeresolver {
     requires org.dnsjava;
     requires org.slf4j;
+    exports dev.pinter.fakeresolver;
 }

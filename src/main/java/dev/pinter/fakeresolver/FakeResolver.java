@@ -14,7 +14,7 @@
    limitations under the License.
  */
 
-package dev.pinter;
+package dev.pinter.fakeresolver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

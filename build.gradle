@@ -24,7 +24,7 @@ dependencies {
 }
 
 ext {
-    moduleName = 'dnsjava-fakeresolver'
+    moduleName = 'dev.pinter.fakeresolver'
 }
 
 jar {
