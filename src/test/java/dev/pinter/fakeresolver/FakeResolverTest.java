@@ -21,8 +21,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xbill.DNS.ARecord;
 import org.xbill.DNS.DClass;
 import org.xbill.DNS.Lookup;
+import org.xbill.DNS.MXRecord;
+import org.xbill.DNS.NSRecord;
 import org.xbill.DNS.Name;
 import org.xbill.DNS.RRset;
 import org.xbill.DNS.Record;
@@ -54,6 +57,7 @@ public class FakeResolverTest {
     private static String externalNameTXT = "example.com";
     private static String externalNameMX = "example.com";
     private static String externalNameCNAME = "www.example.com";
+    private static String externalNameNS = "example.com";
 
     @BeforeAll
     public static void setupAll() throws TextParseException {
@@ -62,6 +66,7 @@ public class FakeResolverTest {
         externalNameTXT = validateName(externalNameTXT, Type.TXT, "apache.org", "iana.org");
         externalNameMX = validateName(externalNameMX, Type.MX, "apache.org", "iana.org");
         externalNameCNAME = validateName(externalNameCNAME, Type.CNAME, "www.iana.org", "www.github.com");
+        externalNameNS = validateName(externalNameNS, Type.NS, "apache.org", "iana.org");
     }
 
     @BeforeEach
@@ -121,6 +126,7 @@ public class FakeResolverTest {
         List<Record> found = lookup(Name.fromString("shouldResolveMX", Name.fromString(domain)), Type.MX, fakeResolver);
         assertNotNull(found);
         assertEquals(1, found.size());
+        assertEquals(10, ((MXRecord) found.get(0)).getPriority());
         found.forEach(r -> assertEquals(Type.MX, r.getType(), "Wrong Type: " + Type.string(r.getType())));
 
     }
@@ -128,6 +134,29 @@ public class FakeResolverTest {
     @Test
     public void shouldMatchResolvedMX() throws IOException {
         recordsMatch(Name.fromString(externalNameMX), Type.MX);
+    }
+
+    @Test
+    public void shouldResolveNS() throws IOException {
+        String domain = "fakeresolver.zone";
+        List<String> nsIp = Arrays.asList("192.0.2.11", "192.0.2.12", "192.0.2.13");
+        FakeResolver fakeResolver = new FakeResolver();
+        fakeResolver.fromZoneFile(domain, DNSZONEFILE);
+
+        List<Record> found = lookup(Name.fromString("shouldResolveNS", Name.fromString(domain)), Type.NS, fakeResolver);
+        assertNotNull(found);
+        assertEquals(3, found.size());
+        found.forEach(r -> {
+            assertEquals(Type.NS, r.getType(), "Wrong Type: " + Type.string(r.getType()));
+            List<Record> nsA = lookup(((NSRecord) r).getTarget(), Type.A, fakeResolver);
+            assertEquals(1, nsA.size());
+            assertTrue(nsIp.contains(((ARecord) nsA.getFirst()).getAddress().getHostAddress()));
+        });
+    }
+
+    @Test
+    public void shouldMatchResolvedNS() throws IOException {
+        recordsMatch(Name.fromString(externalNameNS), Type.NS);
     }
 
     @Test
